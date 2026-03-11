@@ -469,5 +469,30 @@ initRouter({
   '/about': (app) => renderAboutPage(app, getContent()),
   '/contact': (app) => renderContactPage(app, getContent()),
   '/testimonials': (app) => renderTestimonialsPage(app, getContent()),
-  '/adminpanel': (app) => renderAdminPanel(app)
+  '/adminpanel': (app) => renderAdminPanel(app),
+  '/adminpanel/git': (app) => renderGitStatus(app)
 });
+
+function renderGitStatus(container) {
+  applyColors(getContent().colors);
+  container.innerHTML = `
+    ${renderNavbar(getContent())}
+    <div style="padding: 150px 20px; max-width: 600px; margin: 0 auto; text-align: center;">
+      <h2 style="margin-bottom: 20px;">🐙 GitHub CMS Status</h2>
+      <div class="glass-card" style="padding: 30px; text-align: left;">
+        <p style="margin-bottom: 15px;">The Admin Panel is now configured to save content directly to your GitHub repository.</p>
+        <p style="margin-bottom: 15px;"><strong>How it works:</strong></p>
+        <ul style="margin-bottom: 20px; padding-left: 20px;">
+          <li>When you click "Save" in the Admin Panel, it sends a request to a secure Vercel Serverless Function (<code>/api/saveContent</code>).</li>
+          <li>This server function reads the securely stored <code>GITHUB_PAT</code> environment variable attached to your Vercel project.</li>
+          <li>It commits the updated <code>content.json</code> file straight to the <code>main</code> branch.</li>
+        </ul>
+        <div style="background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.3); padding: 15px; border-radius: 8px; margin-top: 20px;">
+          <h4 style="color: #2ecc71; margin: 0 0 10px 0;">✅ Environment Variable Required</h4>
+          <p style="font-size: 0.9em; margin: 0;">Make sure you have added a Personal Access Token to your Vercel Project Settings under Environment Variables with the key <code>GITHUB_PAT</code>.</p>
+        </div>
+      </div>
+      <a href="/adminpanel" class="btn btn-primary" style="margin-top: 30px; display: inline-block;">Back to Admin Panel</a>
+    </div>
+  `;
+}

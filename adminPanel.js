@@ -63,7 +63,7 @@ function renderEditor(container) {
         <div class="admin-actions">
           <button id="preview-btn" class="btn btn-outline">👁 Preview</button>
           <button id="reset-btn" class="btn btn-outline" style="border-color: #e74c3c; color: #e74c3c;">↺ Reset</button>
-          <button id="save-btn" class="btn btn-primary">💾 Save Changes</button>
+          <button id="save-btn" class="btn btn-primary">💾 Save</button>
         </div>
       </div>
       
@@ -88,11 +88,37 @@ function renderEditor(container) {
   });
 
   // Action listeners
-  document.getElementById('save-btn').addEventListener('click', () => {
-    // Need to collect current active tab data before saving
+  document.getElementById('save-btn').addEventListener('click', async () => {
     collectActiveTabData();
-    if (saveContent(currentData)) {
-      showToast('Changes saved successfully!');
+    
+    // Always save to standard localStorage for preview/fallback
+    saveContent(currentData);
+
+    const saveBtn = document.getElementById('save-btn');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = '⏳ Saving...';
+    saveBtn.disabled = true;
+
+    try {
+      // Post to Vercel Serverless Component
+      const res = await fetch('/api/saveContent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentData)
+      });
+      
+      if (res.ok) {
+        showToast('Changes saved and deployed successfully!');
+      } else {
+        const err = await res.json();
+        showToast('Error: ' + (err.error || 'Failed to save to server.'));
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('Error connecting to server to save.');
+    } finally {
+      saveBtn.innerHTML = originalText;
+      saveBtn.disabled = false;
     }
   });
 
@@ -111,6 +137,8 @@ function renderEditor(container) {
   // Initial render
   renderActiveTab();
 }
+
+
 
 function showToast(msg) {
   const toast = document.createElement('div');

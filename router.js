@@ -9,7 +9,8 @@ export function initRouter(routes) {
     }
     
     // Aliases to handle raw html files if served statically without clean routes
-    if (path.includes('adminpanel') || path.includes('adminpannel')) path = '/adminpanel';
+    if (path.includes('adminpanel/git')) path = '/adminpanel/git';
+    else if (path.includes('adminpanel') || path.includes('adminpannel')) path = '/adminpanel';
     else if (path.includes('services')) path = '/services';
     else if (path.includes('about')) path = '/about';
     else if (path.includes('contact')) path = '/contact';
