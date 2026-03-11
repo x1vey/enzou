@@ -1,13 +1,16 @@
 {
   "cleanUrls": true,
-  "rewrites": [
+  "trailingSlash": false,
+  "redirects": [
     {
       "source": "/adminpannel",
-      "destination": "/adminpannel/index.html"
+      "destination": "/adminpanel",
+      "permanent": true
     },
     {
-      "source": "/adminpannel/(.*)",
-      "destination": "/adminpannel/$1"
+      "source": "/adminpanel/(.*)",
+      "destination": "/adminpanel/$1",
+      "permanent": true
     }
   ]
 }
