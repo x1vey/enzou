@@ -1,9 +1,13 @@
 {
-  "redirects": [
+  "cleanUrls": true,
+  "rewrites": [
     {
-      "source": "/",
-      "destination": "/adminpannel",
-      "permanent": false
+      "source": "/adminpannel",
+      "destination": "/adminpannel/index.html"
+    },
+    {
+      "source": "/adminpannel/(.*)",
+      "destination": "/adminpannel/$1"
     }
   ]
 }
